@@ -14,17 +14,18 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.texture.*;
 import net.minecraft.item.trim.ArmorTrim;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.client.render.model.*;
 import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryOps;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -41,10 +42,14 @@ import java.util.function.Supplier;
 import static io.github.andrew6rant.dynamictrim.DynamicTrimClient.isStackedTrimsEnabled;
 
 @Environment(EnvType.CLIENT)
-public record DynamicArmorModel(String armorType) implements UnbakedModel, BakedModel, FabricBakedModel {
+public record DynamicArmorModel(String armorType, Identifier resourceId) implements UnbakedModel, BakedModel, FabricBakedModel {
+    private static final SpriteIdentifier[] SPRITE_IDS = new SpriteIdentifier[]{
+            new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("minecraft:block/furnace_front_on")),
+            new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("minecraft:block/furnace_top"))
+    };
     private static Sprite[] SPRITES = new Sprite[2];
     private static Mesh mesh;
-    public static Function<SpriteIdentifier, Sprite> textureGetter2;
+    //public static Function<SpriteIdentifier, Sprite> textureGetter2;
 
     private static Gson gson = new Gson();
 
@@ -56,20 +61,39 @@ public record DynamicArmorModel(String armorType) implements UnbakedModel, Baked
 
     @Override
     public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
-
+        //for (Identifier dependency : getModelDependencies()) {
+        //    modelLoader.apply(dependency).setParents(modelLoader);
+        //}
     }
 
 
         @Nullable
         @Override
         public BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-            textureGetter2 = textureGetter; // yes, I know this is atrocious code
+
+            //textureGetter2 = textureGetter; // yes, I know this is atrocious code
             Renderer renderer = RendererAccess.INSTANCE.getRenderer();
             MeshBuilder builder = renderer.meshBuilder();
             QuadEmitter emitter = builder.getEmitter();
+
+            SPRITES[0] = textureGetter.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, resourceId));
+            emitter.square(Direction.SOUTH, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
+            //emitter.spriteBake(0, SPRITES[0], MutableQuadView.BAKE_LOCK_UV);
+            //emitter.spriteBake(0, , MutableQuadView.BAKE_NORMALIZED);
+            emitter.spriteColor(0, -1, -1, -1, -1);
+
+            //ItemStack stack = resourceId.
+            //ItemStack.fromNbt()
+            ItemStack stack = Registries.ITEM.get(resourceId).getDefaultStack();
+
+            //Sprite sprite = textureGetter.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("minecraft:block/stone")));
+
+            //SpriteContents spriteContents = new SpriteContents(new Identifier("minecraft:block/stone"), new SpriteDimensions(16, 16), NativeImage.read(new Identifier("minecraft:block/stone").getPath(), MinecraftClient.getInstance().getResourceManager()));
             emitter.emit();
             mesh = builder.build();
             return this;
+
+
         }
 
     @Override
@@ -84,6 +108,7 @@ public record DynamicArmorModel(String armorType) implements UnbakedModel, Baked
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, @NotNull RenderContext context) {
+        /*
         QuadEmitter emitter = context.getEmitter();
         Identifier id = stack.getItem().getRegistryEntry().registryKey().getValue();
         Identifier newId = new Identifier(id.getNamespace(), "item/" + id.getPath());
@@ -123,7 +148,7 @@ public record DynamicArmorModel(String armorType) implements UnbakedModel, Baked
                 emitter.spriteColor(0, -1, -1, -1, -1);
                 emitter.emit();
             }
-        }
+        }*/
         context.meshConsumer().accept(mesh);
     }
 

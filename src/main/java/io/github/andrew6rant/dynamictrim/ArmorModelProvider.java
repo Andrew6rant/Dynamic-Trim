@@ -12,13 +12,13 @@ public class ArmorModelProvider implements ModelResourceProvider {
     @Override
     public @Nullable UnbakedModel loadModelResource(Identifier resourceId, ModelProviderContext context) throws ModelProviderException {
         if(resourceId.toString().contains("helmet")) {
-            return new DynamicArmorModel("helmet");
+            return new DynamicArmorModel("helmet", resourceId);
         } else if(resourceId.toString().contains("chestplate")) {
-            return new DynamicArmorModel("chestplate");
+            return new DynamicArmorModel("chestplate", resourceId);
         } else if(resourceId.toString().contains("leggings")) {
-            return new DynamicArmorModel("leggings");
+            return new DynamicArmorModel("leggings", resourceId);
         } else if(resourceId.toString().contains("boots")) {
-            return new DynamicArmorModel("boots");
+            return new DynamicArmorModel("boots", resourceId);
         } else {
             return null;
         }

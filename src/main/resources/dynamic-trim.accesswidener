@@ -1,0 +1,6 @@
+accessWidener	v1	named
+accessible method net/minecraft/client/texture/SpriteContents createAnimation (Lnet/minecraft/client/texture/SpriteDimensions;IILnet/minecraft/client/resource/metadata/AnimationResourceMetadata;)Lnet/minecraft/client/texture/SpriteContents$Animation;
+accessible class net/minecraft/client/texture/SpriteContents$Animation
+accessible class net/minecraft/client/texture/SpriteContents$AnimationFrame
+accessible field net/minecraft/client/texture/SpriteContents$AnimationFrame time I
+accessible field net/minecraft/client/texture/SpriteContents$AnimationFrame index I
