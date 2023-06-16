@@ -30,5 +30,6 @@
 	},
 	"suggests": {
 		"another-mod": "*"
-	}
+	},
+	"accessWidener": "dynamictrim.accesswidener"
 }

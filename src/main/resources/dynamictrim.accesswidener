@@ -1,0 +1,3 @@
+accessWidener	v1	named
+accessible method net/minecraft/client/texture/Sprite <init> (Lnet/minecraft/util/Identifier;Lnet/minecraft/client/texture/SpriteContents;IIII)V
+accessible field net/minecraft/client/render/model/ModelLoader ITEM_MODEL_GENERATOR Lnet/minecraft/client/render/model/json/ItemModelGenerator;

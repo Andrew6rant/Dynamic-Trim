@@ -100,31 +100,27 @@ public record DynamicArmorModel(String armorType) implements UnbakedModel, Baked
                 for (NbtElement nbtElement : nbtList) {
                     //System.out.println(nbtElement);
                     JsonObject trimJSON = gson.fromJson(nbtElement.asString(), JsonObject.class);
-                    String id_and_material = trimJSON.get("material").getAsString();
-                    String id_and_pattern = trimJSON.get("pattern").getAsString();
-                    String material = id_and_material.substring(id_and_material.indexOf(":")+1);
-                    String pattern = id_and_pattern.substring(id_and_pattern.indexOf(":")+1);
-                    SPRITES[1] = textureGetter2.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("minecraft:trims/items/"+armorType+"_trim_"+pattern+"_"+material)));
-                    emitter.square(Direction.SOUTH, 0.0f, 0.0f, 1.0f, 1.0f, -1.0f);
-                    emitter.spriteBake(0, SPRITES[1], MutableQuadView.BAKE_LOCK_UV);
-                    emitter.spriteColor(0, -1, -1, -1, -1);
-                    emitter.emit();
+                    applyTrim(emitter, trimJSON);
                 }
                 //System.out.println("-----------");
             } else {
                 JsonObject trimJSON = gson.fromJson(stack.getNbt().get("Trim").asString(), JsonObject.class);
-                String id_and_material = trimJSON.get("material").getAsString();
-                String id_and_pattern = trimJSON.get("pattern").getAsString();
-                String material = id_and_material.substring(id_and_material.indexOf(":")+1);
-                String pattern = id_and_pattern.substring(id_and_pattern.indexOf(":")+1);
-                SPRITES[1] = textureGetter2.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("minecraft:trims/items/"+armorType+"_trim_"+pattern+"_"+material)));
-                emitter.square(Direction.SOUTH, 0.0f, 0.0f, 1.0f, 1.0f, -1.0f);
-                emitter.spriteBake(0, SPRITES[1], MutableQuadView.BAKE_LOCK_UV);
-                emitter.spriteColor(0, -1, -1, -1, -1);
-                emitter.emit();
+                applyTrim(emitter, trimJSON);
             }
         }
         context.meshConsumer().accept(mesh);
+    }
+
+    public void applyTrim(QuadEmitter emitter, JsonObject trimJSON) {
+        String id_and_material = trimJSON.get("material").getAsString();
+        String id_and_pattern = trimJSON.get("pattern").getAsString();
+        String material = id_and_material.substring(id_and_material.indexOf(":")+1);
+        String pattern = id_and_pattern.substring(id_and_pattern.indexOf(":")+1);
+        SPRITES[1] = textureGetter2.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("minecraft:trims/items/"+armorType+"_trim_"+pattern+"_"+material)));
+        emitter.square(Direction.SOUTH, 0.0f, 0.0f, 1.0f, 1.0f, -1.0f);
+        emitter.spriteBake(0, SPRITES[1], MutableQuadView.BAKE_LOCK_UV);
+        emitter.spriteColor(0, -1, -1, -1, -1);
+        emitter.emit();
     }
 
     @Override

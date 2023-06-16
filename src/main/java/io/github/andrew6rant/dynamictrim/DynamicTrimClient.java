@@ -10,9 +10,10 @@ import org.slf4j.LoggerFactory;
 
 public class DynamicTrimClient implements ClientModInitializer {
     public static final Boolean isStackedTrimsEnabled = FabricLoader.getInstance().isModLoaded("stacked_trims");
+    public static final DynamicArmorModelGenerator DYNAMIC_ARMOR_MODEL_GENERATOR = new DynamicArmorModelGenerator();
 
     @Override
     public void onInitializeClient() {
-        ModelLoadingRegistry.INSTANCE.registerResourceProvider(rm -> new ArmorModelProvider());
+        //ModelLoadingRegistry.INSTANCE.registerResourceProvider(rm -> new ArmorModelProvider());
     }
 }
